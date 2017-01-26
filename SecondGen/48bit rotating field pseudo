@@ -1,0 +1,70 @@
+IF BIT 155-158 == '0000'	//C/S G.008 Objective Requirements
+	BIT 155-158	Elapsed times since activation
+		binary --> decimal (0 to 63 hours in 1 hour steps)
+	
+	BIT 165-175	Time from last encoded location
+		binary --> decimal (0 to 2047 minutes in 1 minute steps)
+	
+	BIT 176-185	Altitude encoded location
+		IF all 1s
+			return: "No altitude data available"
+		ELSE
+			binary --> decimal (-400m to 15968m in 16m steps)
+			return: -400 + (16*decoded altitude)
+	
+	BIT 186-193 Dilution of precision
+		BIT 186-189	HDOP
+			'0000': DOP <=1
+			'0001': DOP >1 and <=2
+			'0010': DOP >2 and <=3
+			'0011': DOP >3 and <=4
+			'0100': DOP >4 and <=5
+			'0101': DOP >5 and <=6
+			'0110': DOP >6 and <=7
+			'0111':	DOP >7 and <=8
+			'1000': DOP >8 and <=10
+			'1001': DOP >10 and <=12
+			'1010': DOP >12 and <=15
+			'1011': DOP >15 and <=20
+			'1100': DOP >20 and <=30
+			'1101': DOP >30 and <=50
+			'1110': DOP >50
+			'1111': DOP not available
+		BIT 190-193 VDOP
+			Same as HDOP
+
+	BIT 194-195	Automated/manual activation notification
+		'00': Manual activation by user
+		'01': Automatic activation by the beacon
+		'10': Automatic activation by external means
+		'11': Spare
+
+	BIT 196-198	Remaining battery capacity
+		'000': 	<=5% remaining
+		'001': 	>5% and <=10% remaining
+		'010': 	>10% and <=25% remaining
+		'011':	>25% and <=50% remaining
+		'100': 	>50% and <=75% remaining
+		'101': 	>75% and <=100% remaining
+		'110': 	reserved for future use
+		'111':	battery capacity not available
+
+	BIT 199-200	GNSS status
+		'00': 	No fix
+		'01':	2D location only
+		'10': 	3D location
+		'11': 	Reserved for future use
+
+IF BIT 155-158 == '0001'	//Inflight Emergency
+
+
+IF BIT 155-158 == '0010'	//RLS
+
+
+IF BIT 155-158 == '0011'	//Notional Use
+
+
+IF BIT 155-158 == '1111'	//Cancellation Message
+
+
+ELSE

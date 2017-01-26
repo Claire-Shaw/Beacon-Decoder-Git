@@ -1,0 +1,14 @@
+1-20,10011001100101001000,Type Approval Certificate #:,629064
+21-30,0111001111,Serial Number:,463
+31-40,0101011101,Country code:,349 Unknown MID
+41,1,Status of homing device:,"Beacon is equipped with at least one homing signal. If beacon has been activated, at least one homing device is functional and transmitting"
+42,0,Self-test function:,Self-test transmission
+43,1,User cancellation:,User cancellation message
+44-66,11011101000111001010110,Latitude:,Invalid Latitude
+67-90,011000100001100110011111,Longitude:,Invalid Longitude
+91-93,010,Vessel ID:,Radio Call Sign
+94-135,000010111110010101001110000010010011001001,Radio Callsign:,errorK6errorerrorerrorerror
+136-137,10,Spare:,ERROR: Bits 136-137 should be all 0s
+138-154,01000111100101100,Spare:,ERROR: Bits 138-154 should be 1s
+155-158,1000,Rotating Field Type:,Spare
+
