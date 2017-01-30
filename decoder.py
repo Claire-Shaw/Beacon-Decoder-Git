@@ -14,7 +14,7 @@ import sys
 
 import Gen2secondgen as Gen2
 
-##Test
+
 class MapDlg(QDialog, ui_map.Ui_Dialog):
     def __init__(self, parent=None):
         super(MapDlg, self).__init__(parent)
