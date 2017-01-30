@@ -234,7 +234,7 @@ class ThreadClassOpen(QThread):
         self.emit(SIGNAL('LOAD'), 50)
         hexcodes = open(self.filename, 'r')
 
-        content = ['{num:05d}  {h}'.format(num=n+1, h=x.strip('\n')) for n,x in enumerate(hexcodes.readlines())]
+        content = ['{num:05d}  {h}'.format(num=n+1, h=x.strip('\n')) for n, x in enumerate(hexcodes.readlines())]
         self.emit(SIGNAL('LOAD'), 95)
         self.hexlist.addItems(content)
         self.emit(SIGNAL('LOAD'), 100)
