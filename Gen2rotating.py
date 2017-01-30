@@ -43,7 +43,7 @@ def rotating0(bits):
                         bits[32:36],
                         'HDOP:',
                         hdop])
-    
+
     vdop = Func.getDOP(bits[36:40])
     rotatingbin.append(['190-193 (Rotating field 35-39)',
                         bits[36:40],
@@ -51,21 +51,21 @@ def rotating0(bits):
                         vdop])
 
     ##BIT 40-41 (194-195) Automated/manual activation notification
-    activation=definitions.activation_note[bits[40:42]]
+    activation = definitions.activation_note[bits[40:42]]
     rotatingbin.append(['194-194 (Rotating field 40-41)',
                         bits[40:42],
                         'Automated/manual activation notification',
                         activation])
 
     ##BIT 42-44 (196-198) Remaining battery capacity
-    battery=definitions.battery[bits[42:45]]
+    battery = definitions.battery[bits[42:45]]
     rotatingbin.append(['196-198 (Rotating field 42-44)',
                         bits[42:45],
                         'Remaining battery capacity',
                         battery])
 
     ##BIT 45-46 (199-200) GNSS status
-    gnss=definitions.gnss_status[bits[45:47]]
+    gnss = definitions.gnss_status[bits[45:47]]
     rotatingbin.append(['199-200 (Rotating field 45-46)',
                         bits[45:47],
                         'GNSS status',
@@ -82,7 +82,7 @@ def rotating0(bits):
                             bits[47:],
                             'Spare',
                             'ERROR: Should be 00'])
-    
+
     return rotatingbin
 
 
@@ -122,14 +122,14 @@ def rotating1(bits):
                         trigger])
 
     ##BIT 36-37 (190-191) GNSS Status
-    gnss=definitions.gnss_status[bits[36:38]]
+    gnss = definitions.gnss_status[bits[36:38]]
     rotatingbin.append(['190-191 (Rotating field 36-37)',
                         bits[36:38],
                         'GNSS status',
                         gnss])
 
     ##BIT 38-39 (192-193) Remaining battery capacity
-    battery=definitions.inflight_battery[bits[38:40]]
+    battery = definitions.inflight_battery[bits[38:40]]
     rotatingbin.append(['192-193 (Rotating field 38-39)',
                         bits[38:40],
                         'Remaining battery capacity',
@@ -172,12 +172,12 @@ def rotating2(bits):
     if bits[7] == '1':
         rotatingbin.append(['161 (Rotating field 7)',
                             bits[7],
-                            'Capability to process automatically generated Acknowledgement RLM Type-1',
+                            'Capability to process automatically generated (Acknowledgement RLM Type-1)',
                             'Acknowledgement Type-1 accepted by this beacon'])
     else:
         rotatingbin.append(['161 (Rotating field 7)',
                             bits[7],
-                            'Capability to process automatically generated Acknowledgement RLM Type-1',
+                            'Capability to process automatically generated (Acknowledgement RLM Type-1)',
                             'Acknowledgement Type-1 not requested and not accepted by this beacon'])
 
     if bits[8] == '1':
@@ -208,7 +208,7 @@ def rotating2(bits):
 
     ##BIT 16-37 (170-190) Beacon Feedback (acknowledgement of RLM reception)
     if bits[13:16] == '001':
-        if bit[16] == '0':
+        if bits[16] == '0':
             rotatingbin.append(['170 (Rotating field 16)',
                                 bits[16],
                                 'RLM Short/Long message identifier',
@@ -225,7 +225,7 @@ def rotating2(bits):
                             'Reserved'])
 
         #################################### MUST CLARIFY!!!!!! ##########################################################################
-        if bit[16] == '0' & bit[17] == '0':
+        if bits[16] == '0' & bits[17] == '0':
             rotatingbin.append(['172-190 (Rotating field 18-37)',
                                 bits[18:38],
                                 'RLM',
@@ -292,7 +292,7 @@ def rotating15(bits):
 
     #Add a single bit offset so bits array # matches documentation for readbility
     bits = '0'+ bits
-    
+
     ##BIT 5-46 (159-200) Fixed
     if Func.checkones(bits[5:47]):
         rotatingbin.append(['159-200 (Rotating field 5-46)',

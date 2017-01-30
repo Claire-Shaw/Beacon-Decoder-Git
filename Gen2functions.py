@@ -159,5 +159,6 @@ def calcBCH(binary, b1start, b1end, b2end):
                 if bchlist[i+k] == gx[k]:
                     bchlist[i+k] = '0'
                 else:
-                    bchlist[i+k]= '1'
+                    bchlist[i+k] = '1'
     return ''.join(bchlist)[b1end-b2end:]
+    
