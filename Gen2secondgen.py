@@ -5,7 +5,6 @@
 import Gen2functions as Func
 import Gen2rotating as rotating
 
-##Test comment
 
 class Gen2Error(Exception):
     def __init__(self, value, message):
