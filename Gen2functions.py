@@ -1,4 +1,4 @@
-import Gen2definitions as newdefinitions
+import definitions
 
 
 def bin2dec(binary_str):
@@ -26,7 +26,7 @@ def bin2hex(binval):
 
 def countryname(mid):
     try:
-        cname = newdefinitions.countrydic[mid]
+        cname = definitions.countrydic[mid]
     except KeyError:
         cname = 'Unknown MID'
     return cname
@@ -102,7 +102,7 @@ def baudot2str(binary, chars):
     for i in range(0, chars):
         bits = str(binary[start:stop])
         try:
-            message = message + newdefinitions.baudot[bits]
+            message = message + definitions.baudot[bits]
         except KeyError:
             message = message + 'error'
         start += increment
@@ -138,7 +138,7 @@ def sec2utc(b):
 
 def getDOP(b):
     try:
-        mydop = newdefinitions.dop[b]
+        mydop = definitions.dop[b]
     except KeyError:
         mydop = 'Unknown DOP'
     return mydop

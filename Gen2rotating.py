@@ -1,7 +1,7 @@
 #48 BIT ROTATING FIELD
 
 import Gen2functions as Func
-import Gen2definitions as newdefinitions
+import definitions as definitions
 
 
 
@@ -11,11 +11,11 @@ import Gen2definitions as newdefinitions
 
 def rotating0(bits):
     rotatingbin = []
-    
+
     #Add a single bit offset so bits array # matches documentation for readbility
     bits = '0'+ bits
 
-    
+
     ##BIT 5-10 (159-164) Elapsed time since activation (0 to 63 hours in 1 hour steps)
     t_act = Func.bin2dec(bits[5:11])
     rotatingbin.append(['159-164 (Rotating field 5-10)',
@@ -51,21 +51,21 @@ def rotating0(bits):
                         vdop])
 
     ##BIT 40-41 (194-195) Automated/manual activation notification
-    activation=newdefinitions.activation_note[bits[40:42]]
+    activation=definitions.activation_note[bits[40:42]]
     rotatingbin.append(['194-194 (Rotating field 40-41)',
                         bits[40:42],
                         'Automated/manual activation notification',
                         activation])
 
     ##BIT 42-44 (196-198) Remaining battery capacity
-    battery=newdefinitions.battery[bits[42:45]]
+    battery=definitions.battery[bits[42:45]]
     rotatingbin.append(['196-198 (Rotating field 42-44)',
                         bits[42:45],
                         'Remaining battery capacity',
                         battery])
 
     ##BIT 45-46 (199-200) GNSS status
-    gnss=newdefinitions.gnss_status[bits[45:47]]
+    gnss=definitions.gnss_status[bits[45:47]]
     rotatingbin.append(['199-200 (Rotating field 45-46)',
                         bits[45:47],
                         'GNSS status',
@@ -113,7 +113,7 @@ def rotating1(bits):
 
     ##BIT 32-35 (186-189) Triggering event
     try:
-        trigger = newdefinitions.triggering_event[bits[32:36]]
+        trigger = definitions.triggering_event[bits[32:36]]
     except KeyError:
         trigger = 'ERROR: Unknown trigger'
     rotatingbin.append(['186-189 (Rotating field 32-35)',
@@ -122,14 +122,14 @@ def rotating1(bits):
                         trigger])
 
     ##BIT 36-37 (190-191) GNSS Status
-    gnss=newdefinitions.gnss_status[bits[36:38]]
+    gnss=definitions.gnss_status[bits[36:38]]
     rotatingbin.append(['190-191 (Rotating field 36-37)',
                         bits[36:38],
                         'GNSS status',
                         gnss])
 
     ##BIT 38-39 (192-193) Remaining battery capacity
-    battery=newdefinitions.inflight_battery[bits[38:40]]
+    battery=definitions.inflight_battery[bits[38:40]]
     rotatingbin.append(['192-193 (Rotating field 38-39)',
                         bits[38:40],
                         'Remaining battery capacity',
@@ -162,7 +162,7 @@ def rotating2(bits):
     bits = '0'+ bits
 
     ##BIT 5-6 (159-160) Beacon Type
-    beacon = newdefinitions.beacon_type[bits[5:7]]
+    beacon = definitions.beacon_type[bits[5:7]]
     rotatingbin.append(['159-160 (Rotating field 5-6)',
                         bits[5:7],
                         'Beacon type',
@@ -198,7 +198,7 @@ def rotating2(bits):
 
     ##BIT 13-15 (167-169) RLS Provider Identification
     try:
-        rlsp = newdefinitions.rls_provider[bits[13:16]]
+        rlsp = definitions.rls_provider[bits[13:16]]
     except KeyError:
         rlsp = 'Unknown RLS provider'
     rotatingbin.append(['167-169 (Rotating field 13-15)',
@@ -306,7 +306,7 @@ def rotating15(bits):
                             'ERROR: Should be all 1s'])
 
     ##BIT 47-48 (201-202) Method of deactivation
-    deact = newdefinitions.deactivation[bits[47:]]
+    deact = definitions.deactivation[bits[47:]]
     rotatingbin.append(['201-202 (Rotating field 47-48)',
                         bits[47:],
                         'Method of deactivation',
