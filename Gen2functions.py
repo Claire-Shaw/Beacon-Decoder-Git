@@ -31,9 +31,10 @@ def hex2bin(my_hex):
     Returns:
         out_bin (str): binary data in string format, 250 bits long
     """
-
-    out_bin = bin(int(my_hex, 16))[2:].zfill(250)
-
+    if len(my_hex) == 51:
+        out_bin = bin(int(my_hex, 16))[2:].zfill(202)
+    else:
+        out_bin = bin(int(my_hex, 16))[2:].zfill(250)
     return str(out_bin)
 
 

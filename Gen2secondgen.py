@@ -27,7 +27,7 @@ class SecondGen(Gen2Error):
 
 
 
-        if len(self.bits) == 250:
+        if len(self.bits) == 250 or len(self.bits) == 202:
             self.tablebin = []
             self.rotatingbin = []
 
@@ -475,18 +475,18 @@ class SecondGen(Gen2Error):
             ####################################
             # 48-BIT BCH ERROR CORRECTING CODE #
             ####################################
+            if len(self.bits) == 250:
+                ##Calculate the BCH
+                self.calculatedBCH = Func.calcBCH(self.bits[1:], 0, 202, 250)
 
-            ##Calculate the BCH
-            self.calculatedBCH = Func.calcBCH(self.bits[1:], 0, 202, 250)
+                ##Compare to the BCH in the beacon message
+                self.BCHerrors = Func.errors(self.calculatedBCH, self.bits[203:])
 
-            ##Compare to the BCH in the beacon message
-            self.BCHerrors = Func.errors(self.calculatedBCH, self.bits[203:])
-
-            ##Write the number of errors to our table
-            self.tablebin.append(['',
-                                  '',
-                                  'Number of BCH errors:',
-                                  str(self.BCHerrors)])
+                ##Write the number of errors to our table
+                self.tablebin.append(['',
+                                      '',
+                                      'Number of BCH errors:',
+                                      str(self.BCHerrors)])
 
         else:
             self.type = ('Hex string length of ' + str(len(strhex)) + '.'
