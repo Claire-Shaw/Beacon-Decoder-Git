@@ -84,7 +84,7 @@ def getlatitude(lat):
             Otherwise, it will be negative
     """
 
-    if lat == 01111111000001111100000:  #Default value
+    if lat == '01111111000001111100000':  #Default value
         return ('No latitude data available', 'N/A')
 
     else:
@@ -123,7 +123,7 @@ def getlongitude(lon):
             Otherwise, it will be negative
     """
 
-    if lon == 011111111111110000011111:     #Default value
+    if lon == '011111111111110000011111':     #Default value
         return ('No longitude data available', 'N/A')
 
     else:
@@ -209,36 +209,54 @@ def checkzeros(a):
 
 
 
-def getaltitude(m):
-    """If input is all ones, not altitude available
+def getaltitude(alt_bits):
+    """If input is all ones, not altitude available.
     Otherwise, convert the binary string to decimal.
-    Altitude starts at -400 meters
+    Altitude starts at -400 meters.
+
+    Args:
+        alt_bits (str): binary string
+    Returns:
+        altitude (str): string containing decoded altitude data
     """
-    if checkones(m):
-        return 'No altitude data available'
+
+    if checkones(alt_bits):
+        altitude = 'No altitude data available'
     else:
-        return str(-400 + 16*bin2dec(m))+' m'
+        altitude = str(-400 + 16*bin2dec(alt_bits))+' m'
+    return altitude
 
 
 
-def sec2utc(b):
-    """Converts binary string to decimal
-    Input is total number of seconds. Convert seconds to hours, minutes & seconds
+def sec2utc(timebits):
+    """Converts binary string to decimal.
+    Input is total number of seconds. Convert seconds to formatted hours, minutes & seconds.
+
+    Args:
+        timebits (str): total time in seconds, in binary format
+    Returns:
+        hh:mm:ss (str): formatted UTC time
     """
 
-    time = bin2dec(b)
+    time = bin2dec(timebits)
     hh = (int)(time / 3600)
     mm = (int)((time - hh*3600)/60)
     ss = time - (hh*3600) - (mm*60)
-    return str(hh)+':'+str(mm)+':'+str(ss)+' UTC'
+    return str(hh) + ':' + str(mm) + ':' + str(ss) + ' UTC'
 
 
 
-def getDOP(b):
-    """Input binary string, look up in DOP table"""
+def getDOP(dop_bits):
+    """Input binary string, look up in DOP table.
+
+    Args:
+        dop_bits (str): bit string
+    Returns:
+        mydop (str): string containing DOP (dilution of precision)
+    """
 
     try:
-        mydop = definitions.dop[b]
+        mydop = definitions.dop[dop_bits]
     except KeyError:
         mydop = 'Unknown DOP'
     return mydop
@@ -246,7 +264,14 @@ def getDOP(b):
 
 
 def errors(b1, b2):
-    """Take two stings of bits, compare, and output the # of differences"""
+    """Take two stings of bits, compare, and output the # of differences.
+
+    Args:
+        b1 (str): bit string 1 to be compared
+        b2 (str): bit string 2 to be compared
+    Returns:
+        bitError (int): number of differences between the two bit strings
+    """
 
     bitError = 0
     for num, bit in enumerate(b1):
@@ -256,7 +281,8 @@ def errors(b1, b2):
 
 
 def calcBCH(binary, b1start, b1end, b2end):
-    """ Calculates the expected BCH error-correcting code for a given binary string
+    """ Calculates the expected BCH error-correcting code for a given binary string.
+    See C/S T.018 for details.
 
     Args:
         binary (str): binary string
