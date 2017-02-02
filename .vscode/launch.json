@@ -10,7 +10,7 @@
             "pythonPath":"${config.python.pythonPath}", 
             "request": "launch",
             "stopOnEntry": false,
-            "console": "none",
+            "console": "integratedTerminal",
             "program": "${file}",
             "cwd": "${workspaceRoot}",
             "debugOptions": [
