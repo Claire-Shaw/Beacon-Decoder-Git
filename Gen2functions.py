@@ -168,7 +168,7 @@ def encodeLatitude(lat_float):
     lat_decimal = (lat_float - lat_degrees)
     lat_decimal_bin = ''
 
-    lat_decimal *= 2
+    """lat_decimal *= 2
     while len(lat_decimal_bin) < 15:
         print lat_decimal
         if lat_decimal > 1:
@@ -184,7 +184,9 @@ def encodeLatitude(lat_float):
         lat_remainder = bin2dec(lat_decimal_bin) + 1
         lat_decimal_bin = decodefunctions.dec2bin(lat_remainder).zfill(15)
         print lat_decimal_bin
+        """
 
+        
     lat_binary = lat_degrees_bin + lat_decimal_bin
 
     return lat_binary
