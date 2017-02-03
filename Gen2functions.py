@@ -1,7 +1,7 @@
 """Functions specific to Second Generation Beacons"""
 
 import definitions
-
+import decodefunctions
 
 
 def bin2dec(binary_str):
@@ -146,6 +146,48 @@ def getlongitude(lon):
             return ('Invalid Longitude', 'N/A')
         else:
             return ((str(longitude) + " " + ewflag), signedLon)
+
+
+def encodeLatitude(lat_float):
+    """Input latitude in decimal format, and produce binary representation
+
+    Args:
+        lat_float (float): latitude in decimal format
+    Returns
+        lat_binary (str): binary string representation of latitude
+    """
+
+    ##lat_float must contain 5 decimal places
+    lat_float = float("{0:.5f}".format(lat_float))
+
+    ##take whole number and convert to binary
+    lat_degrees = int(lat_float)
+    lat_degrees_bin = str(decodefunctions.dec2bin(lat_degrees).zfill(7))
+
+    ##For the decimal portion, we will use the Successive Multiplication Method
+    lat_decimal = (lat_float - lat_degrees)
+    lat_decimal_bin = ''
+
+    lat_decimal *= 2
+    while len(lat_decimal_bin) < 15:
+        print lat_decimal
+        if lat_decimal > 1:
+            lat_decimal_bin += '1'
+            lat_decimal -= 1
+        else:
+            lat_decimal_bin += '0'
+        lat_decimal *= 2
+
+    ##If remainder >= 0.5, we must add 1 to the computed binary number
+    if lat_decimal >= 0.5:
+        print 'adding one'
+        lat_remainder = bin2dec(lat_decimal_bin) + 1
+        lat_decimal_bin = decodefunctions.dec2bin(lat_remainder).zfill(15)
+        print lat_decimal_bin
+
+    lat_binary = lat_degrees_bin + lat_decimal_bin
+
+    return lat_binary
 
 
 

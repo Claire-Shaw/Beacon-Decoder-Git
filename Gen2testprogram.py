@@ -5,16 +5,9 @@ import decodefunctions as Func1
 import Gen2functions as Func2
 
 
-bins = Func2.hex2bin('99340039A3DC00000000001C60CE8C8A024BFFC0100C198096C')
-print bins
-
-newhex = Func2.bin2hex('001001100100110100000000000011100110100011110111000000000000000000000000000000000000000000000111000110000011001110100011001000101000000010010010111111111111000000000100000000110000011001100000001001011011')
-print newhex
-
-
-# Ask for the number and store it in userInput
+##BIT 1-20  Type Approval Certificate #
+# Ask for the user input and store it in userInput
 userInput = raw_input('Please enter TAC: ')
-
 try:
     tac = int(userInput)
 # Catch the exception if the input was not a number
@@ -22,22 +15,88 @@ except ValueError:
     tac = 0
 else:
     bits_tac = Func1.dec2bin(tac).zfill(20)
+print 'You entered ' + str(Func2.bin2dec(bits_tac))
 
 
-print tac
+##BIT 21-30 Serial Number
+userInput = raw_input('Please enter serial number: ')
+try:
+    serialnum = int(userInput)
+except ValueError:
+    serialnum = 0
+else:
+    bits_serialnum = Func1.dec2bin(serialnum).zfill(10)
+print 'You entered ' + str(Func2.bin2dec(bits_serialnum))
 
 
-serialnum = Func1.dec2bin(573).zfill(10)
-countrycode = Func1.dec2bin(201).zfill(10)
-status = '1'
-selftest = '1'
-cancel = '0'
-#lat = '0' + Func1.dec2bin(35).zfill(7) + Func1.dec2bin(77158).zfill(15)
-#print Func2.getlatitude(lat)
-lat = '00110000011001110100011'
+##BIT 31-40 Country code
+userInput = raw_input('Please enter country code: ')
+try:
+    countrycode = int(userInput)
+except ValueError:
+    countrycode = 0
+else:
+    bits_countrycode = Func1.dec2bin(countrycode).zfill(10)
+print 'You entered ' + str(countrycode) + ' ' +Func2.countryname(countrycode)
+
+
+##BIT 41 Status of homing device
+userInput = raw_input('Please enter homing status (1 or 0): ')
+try:
+    status = int(userInput)
+except ValueError:
+    status = 0
+else:
+    bits_status = str(status)
+print 'You entered ' + str(bits_status)
+
+
+##BIT 42 Self-test function
+userInput = raw_input('Please enter self-test status (1 or 0): ')
+try:
+    selftest = int(userInput)
+except ValueError:
+    selftest = 0
+else:
+    bits_selftest = str(selftest)
+print 'You entered ' + str(bits_selftest)
+
+
+##BIT 43 User cancellation
+userInput = raw_input('Please enter user cancellation status (1 or 0): ')
+try:
+    cancel = int(userInput)
+except ValueError:
+    cancel = 0
+else:
+    bits_cancel = str(cancel)
+print 'You entered ' + str(bits_cancel)
+
+
+##BIT 44-66 Latitude
+userInput = raw_input('Please enter N/S flag (0 for north or 1 for south): ')
+try:
+    nsflag = int(userInput)
+except ValueError:
+    neflag = 0
+else:
+    bits_latitude = str(nsflag)
+
+userInput = raw_input('Please enter latitude in degrees: ')
+try:
+    lat_degrees = float(userInput)
+except ValueError:
+    lat_degrees = 0
+else:
+    bits_latitude = bits_latitude + Func2.encodeLatitude(lat_degrees)
+
+print 'You entered ' + Func2.getlatitude(bits_latitude)[0]
+
+
+##BIT 67-90 Longitude
 lon = '001000101000000010010010'
 
-maininfo = bits_tac + serialnum + countrycode + status + selftest + cancel + lat + lon
+maininfo = bits_tac + bits_serialnum + bits_countrycode + bits_status + bits_selftest + bits_cancel + bits_latitude + lon
 
 print len(maininfo)
 
