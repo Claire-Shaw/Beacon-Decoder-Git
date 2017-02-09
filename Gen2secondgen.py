@@ -57,30 +57,21 @@ class SecondGen(Gen2Error):
                                   str(self.countryCode)+' '+str(self.countryName)])
 
             ##BIT 41 Status of homing device
-            if self.bits[41] == '1':
-                self.status = 'Beacon is equipped with at least one homing signal. If beacon has been activated, at least one homing device is functional and transmitting'
-            else:
-                self.status = 'Beacon is not equipped with any homing signals or they have been deliberately disabled.  If beacon has been activated, no homing device is functional or it has been deliberately disabled'
+            self.status = Func.homingStatus(self.bits[41])
             self.tablebin.append(['41',
                                   self.bits[41],
                                   'Status of homing device:',
                                   self.status])
 
             ##BIT 42 Self-test function
-            if self.bits[42] == '1':
-                self.selfTestStatus = 'Normal beacon operation (transmitting a distress)'
-            else:
-                self.selfTestStatus = 'Self-test transmission'
+            self.selfTestStatus = Func.selfTest(self.bits[42])
             self.tablebin.append(['42',
                                   self.bits[42],
                                   'Self-test function:',
                                   self.selfTestStatus])
 
             ##BIT 43 User cancellation
-            if self.bits[43] == '1':
-                self.cancel = 'User cancellation message'
-            else:
-                self.cancel = 'Normal beacon operation (transmitting a distress or self-test message)'
+            self.cancel = Func.cancellation(self.bits[43])
             self.tablebin.append(['43',
                                   self.bits[43],
                                   'User cancellation:',

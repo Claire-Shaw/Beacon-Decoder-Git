@@ -70,6 +70,58 @@ def countryname(mid):
     return cname
 
 
+def homingStatus(homing_bit):
+    """Decodes homing device status bit (Bit 41)
+
+    Args:
+        homing_bit (str): 1 bit binary
+    Returns:
+        homing_status (str): Decoded homing device status
+    """
+
+    if homing_bit == '1':
+        homing_status = 'Beacon is equipped with at least one homing signal. If beacon has been activated, at least one homing device is functional and transmitting'
+    else:
+        homing_status = 'Beacon is not equipped with any homing signals or they have been deliberately disabled.  If beacon has been activated, no homing device is functional or it has been deliberately disabled'
+
+    return homing_status
+
+
+def selfTest(selftest_bit):
+    """Decodes self-test status bit (Bit 42)
+
+    Args:
+        selftest_bit (str): 1 bit binary
+    Returns:
+        selftest_status (str): Decoded self-test status
+    """
+
+    if selftest_bit == '1':
+        selftest_status = 'Normal beacon operation (transmitting a distress)'
+    else:
+        selftest_status = 'Self-test transmission'
+
+    return selftest_status
+
+
+
+def cancellation(cancel_bit):
+    """Decodes user cancellation bit (Bit 43)
+
+    Args:
+        cancel_bit (str): 1 bit binary
+    Returns:
+        cancel_status (str): Decoded user cancellation status
+    """
+
+    if cancel_bit == '1':
+        cancel_status = 'User cancellation message'
+    else:
+        cancel_status = 'Normal beacon operation (transmitting a distress or self-test message)'
+
+    return cancel_status
+
+
 
 def getlatitude(lat):
     """Decodes 23 latitude bits
@@ -158,19 +210,22 @@ def encodeLatitude(lat_float):
     """
 
     ##lat_float must contain 5 decimal places
-    lat_float = float("{0:.5f}".format(lat_float))
+    lat_float = float("{:.5f}".format(lat_float))
 
-    ##take whole number and convert to binary
+    ##For degrees, take whole number and convert to 7 bit binary string
     lat_degrees = int(lat_float)
     lat_degrees_bin = str(decodefunctions.dec2bin(lat_degrees).zfill(7))
 
-    ##For the decimal portion, we will use the Successive Multiplication Method
+    ##Decimal portion
     lat_decimal = (lat_float - lat_degrees)
     lat_decimal_bin = ''
 
-    """lat_decimal *= 2
+    ##Successive Multiplication Method
+    """ lat_decimal *= 2
     while len(lat_decimal_bin) < 15:
+        lat_decimal = float("{:.5f}".format(lat_decimal))
         print lat_decimal
+        print lat_decimal_bin
         if lat_decimal > 1:
             lat_decimal_bin += '1'
             lat_decimal -= 1
@@ -178,19 +233,53 @@ def encodeLatitude(lat_float):
             lat_decimal_bin += '0'
         lat_decimal *= 2
 
+
     ##If remainder >= 0.5, we must add 1 to the computed binary number
     if lat_decimal >= 0.5:
         print 'adding one'
-        lat_remainder = bin2dec(lat_decimal_bin) + 1
+        lat_remainder = int(bin2dec(lat_decimal_bin))+ 1
         lat_decimal_bin = decodefunctions.dec2bin(lat_remainder).zfill(15)
         print lat_decimal_bin
-        """
+    """
 
-        
+    ##Integral Number Conversion Method
+    lat_decimal = lat_decimal * pow(2, 15)
+    lat_decimal = int(round(lat_decimal))
+    lat_decimal_bin = decodefunctions.dec2bin(lat_decimal).zfill(15)
+
     lat_binary = lat_degrees_bin + lat_decimal_bin
 
     return lat_binary
 
+
+
+def encodeLongitude(lon_float):
+    """Input longitude in decimal format, and produce binary representation
+
+    Args:
+        lon_float (float): longitude in decimal format
+    Returns
+        lon_binary (str): binary string representation of longitude
+    """
+
+    ##lon_float must contain 5 decimal places
+    lon_float = float("{:.5f}".format(lon_float))
+
+    ##For degrees, take whole number and convert to 8 bit binary string
+    lon_degrees = int(lon_float)
+    lon_degrees_bin = str(decodefunctions.dec2bin(lon_degrees).zfill(8))
+
+    ##Decimal portion - Integral Number Conversion Method
+    lon_decimal = (lon_float - lon_degrees)
+    lon_decimal_bin = ''
+
+    lon_decimal = lon_decimal * pow(2, 15)
+    lon_decimal = int(round(lon_decimal))
+    lon_decimal_bin = decodefunctions.dec2bin(lon_decimal).zfill(15)
+
+    lon_binary = lon_degrees_bin + lon_decimal_bin
+
+    return lon_binary
 
 
 def baudot2str(binary, chars):
