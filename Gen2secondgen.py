@@ -57,7 +57,7 @@ class SecondGen(Gen2Error):
                                   str(self.countryCode)+' '+str(self.countryName)])
 
             ##BIT 41 Status of homing device
-            self.status = Func.homingStatus(self.bits[41])
+            self.status = Func.homing(self.bits[41])
             self.tablebin.append(['41',
                                   self.bits[41],
                                   'Status of homing device:',
@@ -158,21 +158,21 @@ class SecondGen(Gen2Error):
                                           'Unique vessel number:',
                                           self.mmsi_string[3:]])
 
-                    self.epirb_ais = Func.bin2dec(self.bits[124:138])
+                self.epirb_ais = Func.bin2dec(self.bits[124:138])
 
-                    if self.epirb_ais == 10922:
-                        self.tablebin.append(['124-137',
-                                              self.bits[124:138],
-                                              'EPIRB-AIS System Identity:',
-                                              'No EPIRB-AIS System'])
-                    else:
-                        self.epirb_ais_str = str(self.epirb_ais).zfill(4)
+                if self.epirb_ais == 10922:
+                    self.tablebin.append(['124-137',
+                                          self.bits[124:138],
+                                          'EPIRB-AIS System Identity:',
+                                          'No EPIRB-AIS System'])
+                else:
+                    self.epirb_ais_str = str(self.epirb_ais).zfill(4)
 
-                        self.epirb_ais_str = '974' + self.mmsi_string[3:5] + self.epirb_ais_str
-                        self.tablebin.append(['124-137',
-                                              self.bits[123:137],
-                                              'EPIRB-AIS System Identity:',
-                                              self.epirb_ais_str])
+                    self.epirb_ais_str = '974' + self.mmsi_string[3:5] + self.epirb_ais_str
+                    self.tablebin.append(['124-137',
+                                          self.bits[123:137],
+                                          'EPIRB-AIS System Identity:',
+                                          self.epirb_ais_str])
 
 
             #############################
@@ -185,18 +185,12 @@ class SecondGen(Gen2Error):
                                       'Vessel ID:',
                                       'Radio Call Sign'])
 
-                self.callsign = Func.baudot2str(self.bits[94:136], 7)
+                self.callsign = Func.getCallsign(self.bits[94:136])
 
-                if self.callsign == "       ":
-                    self.tablebin.append(['94-135',
-                                          self.bits[94:136],
-                                          'Radio Callsign:',
-                                          'No radio callsign available'])
-                else:
-                    self.tablebin.append(['94-135',
-                                          self.bits[94:136],
-                                          'Radio Callsign:',
-                                          self.callsign])
+                self.tablebin.append(['94-135',
+                                      self.bits[94:136],
+                                      'Radio Callsign:',
+                                      self.callsign])
 
                 if Func.checkzeros(self.bits[136:138]):
                     self.tablebin.append(['136-137',
@@ -220,18 +214,12 @@ class SecondGen(Gen2Error):
                                       'Vessel ID:',
                                       'Aircraft Registration Marking (Tail Number)'])
 
-                self.tailnum = Func.baudot2str(self.bits[94:136], 7)
+                self.tailnum = Func.getTailNum(self.bits[94:136])
 
-                if self.tailnum == "       ":
-                    self.tablebin.append(['94-135',
-                                          self.bits[94:136],
-                                          'Aircraft Registration Marking:',
-                                          'No aircraft registration marking available'])
-                else:
-                    self.tablebin.append(['94-135',
-                                          self.bits[94:136],
-                                          'Aircraft Registration Marking:',
-                                          self.tailnum])
+                self.tablebin.append(['94-135',
+                                      self.bits[94:136],
+                                      'Aircraft Registration Marking:',
+                                      self.tailnum])
 
                 if Func.checkzeros(self.bits[135:137]):
                     self.tablebin.append(['136-137',
@@ -466,7 +454,7 @@ class SecondGen(Gen2Error):
             ####################################
             # 48-BIT BCH ERROR CORRECTING CODE #
             ####################################
-            if len(self.bits) == 250:
+            if len(self.bits) == 251:
                 ##Calculate the BCH
                 self.calculatedBCH = Func.calcBCH(self.bits[1:], 0, 202, 250)
 

@@ -50,9 +50,10 @@ def is_neg(s):
         return 1
 
 def  bin2dec(s):
-        return int(s,2)
+    return int(s, 2)
+
 def bin2hex(binval):
-    return str(hex(int(binval,2)))[2:].upper().strip('L')
+    return str(hex(int(binval, 2)))[2:].upper().strip('L')
 
 def hextobin(hexval):
         '''

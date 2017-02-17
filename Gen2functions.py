@@ -48,7 +48,7 @@ def bin2hex(binval):
         hex_str (str): hexadecimal string
     """
 
-    hex_str = str(hex(int(binval, 2)))[2:].upper().strip('L')
+    hex_str = '{:0{}X}'.format(int(binval, 2), len(binval) // 4)
 
     return hex_str
 
@@ -70,7 +70,7 @@ def countryname(mid):
     return cname
 
 
-def homingStatus(homing_bit):
+def homing(homing_bit):
     """Decodes homing device status bit (Bit 41)
 
     Args:
@@ -309,6 +309,26 @@ def baudot2str(binary, chars):
 
 
 
+def str2baudot(my_string):
+    """Convert a string of characters to binary Baudot code
+
+    Args:
+        my_string (str): string of characters to be encoded
+
+    Returns:
+        my_baudot (str): string of binary bits
+    """
+
+    my_string = my_string.upper()
+    my_baudot = ''
+    for c in my_string:
+        try:
+            my_baudot = my_baudot + definitions.baudot2[c]
+        except KeyError:
+            my_baudot = my_baudot + '100100'
+    return my_baudot
+
+
 def checkones(b):
     """Checks if input string is all ones
 
@@ -376,7 +396,7 @@ def sec2utc(timebits):
     hh = (int)(time / 3600)
     mm = (int)((time - hh*3600)/60)
     ss = time - (hh*3600) - (mm*60)
-    return str(hh) + ':' + str(mm) + ':' + str(ss) + ' UTC'
+    return str(hh).zfill(2) + ':' + str(mm).zfill(2) + ':' + str(ss).zfill(2) + ' UTC'
 
 
 
@@ -394,6 +414,41 @@ def getDOP(dop_bits):
     except KeyError:
         mydop = 'Unknown DOP'
     return mydop
+
+
+
+def getCallsign(callsign_bits):
+    """Input binary bits, convert to string using modified Baudot
+
+    Args:
+        callsign_bits (str): bit string
+    Returns:
+        callsign_info (str): decoded callsign information
+    """
+
+    callsign = baudot2str(callsign_bits, 7)
+    if callsign == '       ':
+        callsign_info = 'No radio callsign available'
+    else:
+        callsign_info = callsign
+    return callsign_info
+
+
+def getTailNum(tail_bits):
+    """Input binary bits, convert to string using modified Baudot
+
+    Args:
+        tail_bits (str): bit string
+    Returns:
+        tail_info (str): decoded tail number information
+    """
+
+    tailnum = baudot2str(tail_bits, 7)
+    if tailnum == '       ':
+        tail_info = 'No aircraft registration marking available'
+    else:
+        tail_info = tailnum
+    return tail_info
 
 
 
