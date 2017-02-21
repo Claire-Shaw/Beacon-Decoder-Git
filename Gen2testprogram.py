@@ -533,6 +533,46 @@ elif rotatingID == 2:
 
     rotatingfield = bits_rotating2
 
+##########################################
+# Rotating Field Type: National Use (#3) #
+##########################################
+elif rotatingID == 3:
+    print 'Rotating Field Type: National Use (#3)'
+    bits_rotating3 = bits_rotatingID + ('0' * 44)
+
+
+    rotatingfield = bits_rotating3
+
+###################################################
+# Rotating Field Type: Cancellation Message (#15) #
+###################################################
+elif rotatingID == 15:
+    print 'Rotating Field Type: Cancellation Message (#15)'
+
+    bits_rotating15 = bits_rotatingID + ('1' * 42)
+
+    print 'Please select method of deactivation:'
+    for x in definitions.deactivation:
+        print (x) + ': ' + definitions.deactivation[x]
+    bits_deactivation = raw_input()
+    print 'You entered: ' + definitions.deactivation[bits_deactivation]
+
+    bits_rotating15 += bits_deactivation
+
+    rotatingfield = bits_rotating15
+
+
+####################################
+# All other rotating fields: SPARE #
+####################################
+else:
+    print 'Rotating Field Type: Spare'
+    bits_rotating4 = bits_rotatingID + ('0' * 44)
+
+
+    rotatingfield = bits_rotating4
+
+
 
 bits_maininfo = bits_tac + bits_serialnum + bits_countrycode + bits_status + bits_selftest + bits_cancel + bits_latitude + bits_longitude + vessel_bits + bits_spare
 
