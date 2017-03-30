@@ -12,7 +12,7 @@ import definitions as definitions
 def rotating0(bits):
     rotatingbin = []
 
-    #Add a single bit offset so bits array # matches documentation for readbility
+    #Add a single bit offset so bits array index # matches documentation for readbility
     bits = '0'+ bits
 
 
@@ -94,7 +94,7 @@ def rotating0(bits):
 def rotating1(bits):
     rotatingbin = []
 
-    #Add a single bit offset so bits array # matches documentation for readbility
+    #Add a single bit offset so bits array index # matches documentation for readbility
     bits = '0'+ bits
 
     ##BIT 5-21 (159-175) Time of last encoded location
@@ -158,7 +158,7 @@ def rotating1(bits):
 def rotating2(bits):
     rotatingbin = []
 
-    #Add a single bit offset so bits array # matches documentation for readbility
+    #Add a single bit offset so bits array index # matches documentation for readbility
     bits = '0'+ bits
 
     ##BIT 5-6 (159-160) Beacon Type
@@ -224,7 +224,8 @@ def rotating2(bits):
                             'Reserved',
                             'Reserved'])
 
-        #################################### MUST CLARIFY!!!!!! ##########################################################################
+
+
         if bits[16] == '0' & bits[17] == '0':
             rotatingbin.append(['172-190 (Rotating field 18-37)',
                                 bits[18:38],
@@ -264,7 +265,7 @@ def rotating2(bits):
 def rotating3(bits):
     rotatingbin = []
 
-    #Add a single bit offset so bits array # matches documentation for readbility
+    #Add a single bit offset so bits array index # matches documentation for readbility
     bits = '0'+ bits
 
     ##BIT 5-48 (159-202) As defined by national administrations
@@ -290,7 +291,7 @@ def rotating3(bits):
 def rotating15(bits):
     rotatingbin = []
 
-    #Add a single bit offset so bits array # matches documentation for readbility
+    #Add a single bit offset so bits array index # matches documentation for readbility
     bits = '0'+ bits
 
     ##BIT 5-46 (159-200) Fixed
