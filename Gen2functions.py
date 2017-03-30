@@ -492,4 +492,19 @@ def calcBCH(binary, b1start, b1end, b2end):
                 else:
                     bchlist[i+k] = '1'
     return ''.join(bchlist)[b1end-b2end:]
+
+def isBinary(bit_string):
+    """Determines if input string is binary (consisting of 1s and 0s)
+
+    Args:
+        bit_string (str): binary string to be analysed
+    Returns:
+        boolean: true if all bits are binary, otherwise false
+    """
+
+    for c in bit_string:
+        if not(c == '0' or c == '1'):
+            return False
+    return True
+
     

@@ -435,7 +435,7 @@ class SecondGen(Gen2Error):
             self.hexID.append(self.bits[91:94])
 
             ##Hex ID BIT 48-91 = BITS 94-137 (Aircraft/Vessel ID)
-            self.hexID.append(self.bits[94:137])
+            self.hexID.append(self.bits[94:138])
 
             ##Hex ID BIT 92 = fixed binary 1
             self.hexID.append('1')

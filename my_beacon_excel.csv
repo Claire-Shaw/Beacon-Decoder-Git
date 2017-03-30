@@ -1,0 +1,27 @@
+Bit Range,Bit Value,Number of Bits,Field Name,Field Value
+1-20,'00000000000001100100,20,Type Approval Certificate #:,100
+21-30,'0001100100,10,Serial Number:,100
+31-40,'0011100110,10,Country code:,230 Finland
+41,'0,1,Status of homing device:,"Beacon is not equipped with any homing signals or they have been deliberately disabled.  If beacon has been activated, no homing device is functional or it has been deliberately disabled"
+42,'0,1,Self-test function:,Self-test transmission
+43,'0,1,User cancellation:,Normal beacon operation (transmitting a distress or self-test message)
+44-66,'10010111011011101011100,23,Latitude:,23.4325 S
+67-90,'100010111011100111111001,24,Longitude:,23.45291 W
+91-93,'100,3,Vessel ID:,Aircraft Aviation 24 Bit Address
+94-117,'000000000011000000111001,24,Aviation 24 bit address:,6172
+118-137,'00000000000000000000,20,Spare:,ERROR: Bits 118-137 following aviation 24 bit address should be 0
+138-154,'11111111111111111,17,Spare:,OK
+155-158 (Rotating field 1-4),'0000,4,Rotating Field Type:,(#0) C/S G.008 Objective Requirements
+159-164 (Rotating field 5-10),'000000,6,Elapsed time since activation:,0 hours
+165-175 (Rotating field 11-21),'00000000000,11,Time from last encoded location:,0 minutes
+176-185 (Rotating field 22-31),'0000011111,10,Altitude of encoded location: ,96 m
+186-189 (Rotating field 32-34),'0000,4,HDOP:,DOP <=1
+190-193 (Rotating field 35-39),'0000,4,VDOP:,DOP <=1
+194-194 (Rotating field 40-41),'00,2,Automated/manual activation notification,Manual activation by user
+196-198 (Rotating field 42-44),'101,3,Remaining battery capacity,>75% and <=100% remaining
+199-200 (Rotating field 45-46),'00,2,GNSS status,No fix
+201-202 (Rotating field 47-48),'00,2,Spare,OK
+,',0,Beacon 23 Hex ID:,9CD40019064800607200001
+,',0,Number of BCH errors:,0
+203-250,'101011000100111011111001111000110011011111011101,48,BCH,
+,',0,Beacon message:,000190643984BB75C8BB9F9800607200001FFFF0000003E0050AC4EF9E337DD
