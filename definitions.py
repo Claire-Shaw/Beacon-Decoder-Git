@@ -1,6 +1,7 @@
 ####################################
 # Shared Gen 1 & Gen 2 definitions #
 ####################################
+# Includes 1st and 2nd Gen 
 
 countrydic = {}
 country = open('countries.csv')
