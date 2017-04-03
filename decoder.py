@@ -180,7 +180,7 @@ class MainWindow(QMainWindow, ui_beaconhex.Ui_BeaconDecoder):
 
 
 
-        hexRe = QRegExp(r"[0-9a-fA-F_]{"+'30'+"}")
+        hexRe = QRegExp(r"[0-9a-fA-F_]{"+'75'+"}")
         self.hexLineEdit.setText('')
         self.hexLineEdit.setValidator(
             QRegExpValidator(hexRe, self))
