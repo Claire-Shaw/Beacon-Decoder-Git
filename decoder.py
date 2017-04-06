@@ -207,6 +207,8 @@ class MainWindow(QMainWindow, ui_beaconhex.Ui_BeaconDecoder):
         self.hexlist.currentItemChanged.connect(self.pickHex)
 
     def filesave_dialog(self):
+        export_secondgen = False
+
         fd = QFileDialog(self)
         self.filesave = fd.getSaveFileName(self, "Export decode file", "", 'Save export as csv (*.csv)')
 
@@ -313,7 +315,7 @@ class ThreadClassSave(QThread):
                 try:
                     c.processHex(str(line))
                     if str(c.location[0]).find('Error') != -1:
-                        finallat = courselat = 'error'git
+                        finallat = courselat = 'error'
                     elif str(c.location[0]).find('Default') != -1:
                         finallat = courselat = 'default'
                     else:
