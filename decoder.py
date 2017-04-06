@@ -162,11 +162,18 @@ class MainWindow(QMainWindow, ui_beaconhex.Ui_BeaconDecoder):
         openButton.setStatusTip('Select file with hexidecimal codes')
         openButton.triggered.connect(self.file_dialog)
         # Add save file
-        saveButton = QAction('&Save', self)
+        saveButton = QAction('&Save (First Generation)', self)
         saveButton.setShortcut('Ctrl+S')
         saveButton.setStatusTip('Export decoded')
         saveButton.setStatusTip('Export decoded file')
         saveButton.triggered.connect(self.filesave_dialog)
+
+        # Add save file
+        save2GenButton = QAction('&Save (Second Generation)', self)
+        save2GenButton.setShortcut('Ctrl+Shift+S')
+        save2GenButton.setStatusTip('Export decoded')
+        save2GenButton.setStatusTip('Export decoded file')
+        save2GenButton.triggered.connect(self.secondgen_filesave_dialog)
 
         # Add exit button
         exitButton = QAction('&Exit', self)
@@ -176,6 +183,7 @@ class MainWindow(QMainWindow, ui_beaconhex.Ui_BeaconDecoder):
 
         fileMenu.addAction(openButton)
         fileMenu.addAction(saveButton)
+        fileMenu.addAction(save2GenButton)
         fileMenu.addAction(exitButton)
 
 
@@ -199,6 +207,8 @@ class MainWindow(QMainWindow, ui_beaconhex.Ui_BeaconDecoder):
         self.hexlist.currentItemChanged.connect(self.pickHex)
 
     def filesave_dialog(self):
+        export_secondgen = False
+
         fd = QFileDialog(self)
         self.filesave = fd.getSaveFileName(self, "Export decode file", "", 'Save export as csv (*.csv)')
 
@@ -208,6 +218,17 @@ class MainWindow(QMainWindow, ui_beaconhex.Ui_BeaconDecoder):
             self.threadclass.start()
             self.connect(self.threadclass, SIGNAL('EXPORT'), self.threadclass.updateProgress)
 
+    def secondgen_filesave_dialog(self):
+        export_secondgen = True
+
+        fd = QFileDialog(self)
+        self.filesave = fd.getSaveFileName(self, "Export decode file", "", 'Save export as csv (*.csv)')
+
+        if self.filesave != '':
+
+            self.threadclass = ThreadClassSave(self.filename, self.filesave)
+            self.threadclass.start()
+            self.connect(self.threadclass, SIGNAL('EXPORT'), self.threadclass.updateProgress)
 
     def file_dialog(self):
         fd = QFileDialog(self)
@@ -280,56 +301,113 @@ class ThreadClassSave(QThread):
         c = decodehex2.BeaconHex()
 
         i = 0
-        decoded.write("""Input Message,Self Test,15 Hex ID,Complete,Test Coded,Beacon Type,TAC,Country Code,Country Name,Location Type,Position Source,Course Lat,Course Long,Final Lat,Final Long,Fixed Bits\n""")
 
-        for line in hexcodes.readlines():
-            i += 1
-            #print i, count, i/float(count),i/float(count)*100
-            self.emit(SIGNAL('EXPORT'), i/float(count)*100)
-            line = str(line.strip())
-            decoded.write('{h},'.format(h=str(line)))
-            try:
-                c.processHex(str(line))
-                if str(c.location[0]).find('Error') != -1:
-                    finallat = courselat = 'error'
-                elif str(c.location[0]).find('Default') != -1:
-                    finallat = courselat = 'default'
-                else:
-                    finallat = c.location[0]
-                    courselat = c.courseloc[0]
+        ###SECOND GENERATION EXPORT
+        if export_secondgen == True:
+            decoded.write("""Input Message,Self Test,15 Hex ID,Complete,Test Coded,Beacon Type,TAC,Country Code,Country Name,Location Type,Position Source,Course Lat,Course Long,Final Lat,Final Long,Fixed Bits\n""")
 
-                if str(c.location[1]).find('Error') != -1:
-                    finallong = courselong = 'error'
-                elif str(c.location[1]).find('Default') != -1:
-                    finallong = courselong = 'default'
-                else:
-                    finallong = c.location[1]
-                    courselong = c.courseloc[1]
+            for line in hexcodes.readlines():
+                i += 1
+                #print i, count, i/float(count),i/float(count)*100
+                self.emit(SIGNAL('EXPORT'), i/float(count)*100)
+                line = str(line.strip())
+                decoded.write('{h},'.format(h=str(line)))
+                try:
+                    c.processHex(str(line))
+                    if str(c.location[0]).find('Error') != -1:
+                        finallat = courselat = 'error'
+                    elif str(c.location[0]).find('Default') != -1:
+                        finallat = courselat = 'default'
+                    else:
+                        finallat = c.location[0]
+                        courselat = c.courseloc[0]
 
-                if c._btype == 'Test':
-                    testcode = '1'
-                else:
-                    testcode = '0'
-                decoded.write('{},'.format(str(c.testmsg)))
-                decoded.write('{},'.format(c.hex15))
-                decoded.write('{},'.format(c.bch.complete))
-                decoded.write('{},'.format(testcode))
-                decoded.write('{},'.format(c._btype))
-                decoded.write('{},'.format(c.tac))
-                decoded.write('{},'.format(c.countrydetail.mid))
-                decoded.write('{},'.format(c.countrydetail.cname))
-                decoded.write('{},'.format(c._loctype))
-                decoded.write('{},'.format(c.encpos))
-                decoded.write('{},'.format(courselat))
-                decoded.write('{},'.format(courselong))
-                decoded.write('{},'.format(finallat))
-                decoded.write('{},'.format(finallong))
-                decoded.write('{},'.format(c.fixedbits))
+                    if str(c.location[1]).find('Error') != -1:
+                        finallong = courselong = 'error'
+                    elif str(c.location[1]).find('Default') != -1:
+                        finallong = courselong = 'default'
+                    else:
+                        finallong = c.location[1]
+                        courselong = c.courseloc[1]
 
-            except decodehex2.HexError as e:
+                    if c._btype == 'Test':
+                        testcode = '1'
+                    else:
+                        testcode = '0'
+                    decoded.write('{},'.format(str(c.testmsg)))
+                    decoded.write('{},'.format(c.hex15))
+                    decoded.write('{},'.format(c.bch.complete))
+                    decoded.write('{},'.format(testcode))
+                    decoded.write('{},'.format(c._btype))
+                    decoded.write('{},'.format(c.tac))
+                    decoded.write('{},'.format(c.countrydetail.mid))
+                    decoded.write('{},'.format(c.countrydetail.cname))
+                    decoded.write('{},'.format(c._loctype))
+                    decoded.write('{},'.format(c.encpos))
+                    decoded.write('{},'.format(courselat))
+                    decoded.write('{},'.format(courselong))
+                    decoded.write('{},'.format(finallat))
+                    decoded.write('{},'.format(finallong))
+                    decoded.write('{},'.format(c.fixedbits))
 
-                decoded.write(e.value)
-            decoded.write('\n')
+                except decodehex2.HexError as e:
+
+                    decoded.write(e.value)
+                decoded.write('\n')
+
+
+        ##FIRST GENERATION EXPORT
+        else:
+            decoded.write("""Input Message,Self Test,15 Hex ID,Complete,Test Coded,Beacon Type,TAC,Country Code,Country Name,Location Type,Position Source,Course Lat,Course Long,Final Lat,Final Long,Fixed Bits\n""")
+
+            for line in hexcodes.readlines():
+                i += 1
+                #print i, count, i/float(count),i/float(count)*100
+                self.emit(SIGNAL('EXPORT'), i/float(count)*100)
+                line = str(line.strip())
+                decoded.write('{h},'.format(h=str(line)))
+                try:
+                    c.processHex(str(line))
+                    if str(c.location[0]).find('Error') != -1:
+                        finallat = courselat = 'error'
+                    elif str(c.location[0]).find('Default') != -1:
+                        finallat = courselat = 'default'
+                    else:
+                        finallat = c.location[0]
+                        courselat = c.courseloc[0]
+
+                    if str(c.location[1]).find('Error') != -1:
+                        finallong = courselong = 'error'
+                    elif str(c.location[1]).find('Default') != -1:
+                        finallong = courselong = 'default'
+                    else:
+                        finallong = c.location[1]
+                        courselong = c.courseloc[1]
+
+                    if c._btype == 'Test':
+                        testcode = '1'
+                    else:
+                        testcode = '0'
+                    decoded.write('{},'.format(str(c.testmsg)))
+                    decoded.write('{},'.format(c.hex15))
+                    decoded.write('{},'.format(c.bch.complete))
+                    decoded.write('{},'.format(testcode))
+                    decoded.write('{},'.format(c._btype))
+                    decoded.write('{},'.format(c.tac))
+                    decoded.write('{},'.format(c.countrydetail.mid))
+                    decoded.write('{},'.format(c.countrydetail.cname))
+                    decoded.write('{},'.format(c._loctype))
+                    decoded.write('{},'.format(c.encpos))
+                    decoded.write('{},'.format(courselat))
+                    decoded.write('{},'.format(courselong))
+                    decoded.write('{},'.format(finallat))
+                    decoded.write('{},'.format(finallong))
+                    decoded.write('{},'.format(c.fixedbits))
+
+                except decodehex2.HexError as e:
+
+                    decoded.write(e.value)
+                decoded.write('\n')
 
         decoded.close()
         self.emit(SIGNAL('EXPORT'), 100)
