@@ -207,26 +207,24 @@ class MainWindow(QMainWindow, ui_beaconhex.Ui_BeaconDecoder):
         self.hexlist.currentItemChanged.connect(self.pickHex)
 
     def filesave_dialog(self):
-        export_secondgen = False
 
         fd = QFileDialog(self)
         self.filesave = fd.getSaveFileName(self, "Export decode file", "", 'Save export as csv (*.csv)')
 
         if self.filesave != '':
-
-            self.threadclass = ThreadClassSave(self.filename, self.filesave)
+            self.export_secondgen = False
+            self.threadclass = ThreadClassSave(self.filename, self.filesave,self.export_secondgen)
             self.threadclass.start()
             self.connect(self.threadclass, SIGNAL('EXPORT'), self.threadclass.updateProgress)
 
     def secondgen_filesave_dialog(self):
-        export_secondgen = True
 
         fd = QFileDialog(self)
         self.filesave = fd.getSaveFileName(self, "Export decode file", "", 'Save export as csv (*.csv)')
 
         if self.filesave != '':
-
-            self.threadclass = ThreadClassSave(self.filename, self.filesave)
+            self.export_secondgen = True
+            self.threadclass = ThreadClassSave(self.filename, self.filesave, self.export_secondgen)
             self.threadclass.start()
             self.connect(self.threadclass, SIGNAL('EXPORT'), self.threadclass.updateProgress)
 
@@ -247,6 +245,7 @@ class MainWindow(QMainWindow, ui_beaconhex.Ui_BeaconDecoder):
 class ThreadClassOpen(QThread):
     def __init__(self, filename, hexlist, parent=None):
         super(ThreadClassOpen, self).__init__(parent)
+
 
         self.filename = filename
         self.hexlist = hexlist
@@ -277,12 +276,13 @@ class ThreadClassSave(QThread):
     Thread class is used to show progress bar since export can take several seconds.
     Otherwise user may think the system is frozen.
     """
-    def __init__(self, filename, filesave, parent=None):
+    def __init__(self, filename, filesave, secgen, parent=None):
         super(ThreadClassSave, self).__init__(parent)
         self.filename = filename
         self.filesave = filesave
         self.dialog = Progress()
         self.dialog.show()
+        self.secgen = secgen
 
 
     def run(self):
@@ -298,66 +298,43 @@ class ThreadClassSave(QThread):
         hexcodes = open(self.filename)
         decoded = open(self.filesave, 'w')
 
-        c = decodehex2.BeaconHex()
+
 
         i = 0
 
         ###SECOND GENERATION EXPORT
-        if export_secondgen == True:
-            decoded.write("""Input Message,Self Test,15 Hex ID,Complete,Test Coded,Beacon Type,TAC,Country Code,Country Name,Location Type,Position Source,Course Lat,Course Long,Final Lat,Final Long,Fixed Bits\n""")
+        if self.secgen == True:
+
+            c = Gen2.SecondGen()
+
+            decoded.write("""Input Message,23 Hex ID,Latitude,Longitude\n""")
 
             for line in hexcodes.readlines():
                 i += 1
                 #print i, count, i/float(count),i/float(count)*100
                 self.emit(SIGNAL('EXPORT'), i/float(count)*100)
                 line = str(line.strip())
+
                 decoded.write('{h},'.format(h=str(line)))
+
                 try:
                     c.processHex(str(line))
-                    if str(c.location[0]).find('Error') != -1:
-                        finallat = courselat = 'error'
-                    elif str(c.location[0]).find('Default') != -1:
-                        finallat = courselat = 'default'
-                    else:
-                        finallat = c.location[0]
-                        courselat = c.courseloc[0]
 
-                    if str(c.location[1]).find('Error') != -1:
-                        finallong = courselong = 'error'
-                    elif str(c.location[1]).find('Default') != -1:
-                        finallong = courselong = 'default'
-                    else:
-                        finallong = c.location[1]
-                        courselong = c.courseloc[1]
+                    decoded.write('{},'.format(c.beaconHexID))
+                    decoded.write('{},'.format(c.latitude[0]))
+                    decoded.write('{},'.format(c.longitude[0]))
 
-                    if c._btype == 'Test':
-                        testcode = '1'
-                    else:
-                        testcode = '0'
-                    decoded.write('{},'.format(str(c.testmsg)))
-                    decoded.write('{},'.format(c.hex15))
-                    decoded.write('{},'.format(c.bch.complete))
-                    decoded.write('{},'.format(testcode))
-                    decoded.write('{},'.format(c._btype))
-                    decoded.write('{},'.format(c.tac))
-                    decoded.write('{},'.format(c.countrydetail.mid))
-                    decoded.write('{},'.format(c.countrydetail.cname))
-                    decoded.write('{},'.format(c._loctype))
-                    decoded.write('{},'.format(c.encpos))
-                    decoded.write('{},'.format(courselat))
-                    decoded.write('{},'.format(courselong))
-                    decoded.write('{},'.format(finallat))
-                    decoded.write('{},'.format(finallong))
-                    decoded.write('{},'.format(c.fixedbits))
 
-                except decodehex2.HexError as e:
+                except Gen2.Gen2Error as e2:
+                    decoded.write(e2.value)
 
-                    decoded.write(e.value)
                 decoded.write('\n')
 
 
         ##FIRST GENERATION EXPORT
         else:
+            c = decodehex2.BeaconHex()
+
             decoded.write("""Input Message,Self Test,15 Hex ID,Complete,Test Coded,Beacon Type,TAC,Country Code,Country Name,Location Type,Position Source,Course Lat,Course Long,Final Lat,Final Long,Fixed Bits\n""")
 
             for line in hexcodes.readlines():

@@ -17,14 +17,14 @@ class Gen2Error(Exception):
 
 class SecondGen(Gen2Error):
 
-    def __init__(self, hexCode):
-        self.bits = Func.hex2bin(hexCode)
+    def __init__(self, hexCode=None):
+        self.bits = '0' * 250
 
     def processHex(self, strhex):
 
         ##All second generation beacon messages must be EXACTLY 250 bits
         ##in length for the program to function properly.
-
+        self.bits = Func.hex2bin(strhex)
 
 
         if len(self.bits) == 250 or len(self.bits) == 202:
