@@ -226,7 +226,7 @@ def rotating2(bits):
 
 
 
-        if bits[16] == '0' & bits[17] == '0':
+        if (bits[16] == '0') & (bits[17] == '0'):
             rotatingbin.append(['172-190 (Rotating field 18-37)',
                                 bits[18:38],
                                 'RLM',

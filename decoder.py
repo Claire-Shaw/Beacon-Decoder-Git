@@ -13,9 +13,9 @@ import sys
 ##import psutil
 
 import Gen2secondgen as Gen2
+import Gen2functions
 
-## comment updated
-##Claire test
+
 
 
 class MapDlg(QDialog, ui_map.Ui_Dialog):
@@ -307,7 +307,7 @@ class ThreadClassSave(QThread):
 
             c = Gen2.SecondGen()
 
-            decoded.write("""Input Message,23 Hex ID,Latitude,Longitude\n""")
+            decoded.write("""Input Message,Self Test,23 Hex ID,BCH Errors,Vessel ID,TAC,Country Code,Country Name,Latitude,Longitude\n""")
 
             for line in hexcodes.readlines():
                 i += 1
@@ -320,9 +320,24 @@ class ThreadClassSave(QThread):
                 try:
                     c.processHex(str(line))
 
+                    ##Self Test
+                    decoded.write('{},'.format(c.bits[42]))
+                    ##23 Hex ID
                     decoded.write('{},'.format(c.beaconHexID))
-                    decoded.write('{},'.format(c.latitude[0]))
-                    decoded.write('{},'.format(c.longitude[0]))
+                    ##BCH Errors
+                    decoded.write('{},'.format(c.BCHerrors))
+                    ##Vessel ID
+                    decoded.write('{},'.format(Gen2functions.bin2dec(c.vesselID)))
+                    ##TAC
+                    decoded.write('{},'.format(c.tac))
+                    ##Country Code
+                    decoded.write('{},'.format(c.countryCode))
+                    ##Country Name
+                    decoded.write('{},'.format(c.countryName))
+                    ##Latitude
+                    decoded.write('{},'.format(c.latitude[1]))
+                    ##Longitude
+                    decoded.write('{},'.format(c.longitude[1]))
 
 
                 except Gen2.Gen2Error as e2:
